@@ -34,68 +34,53 @@ def p1():
     print(solution)
 
 
-
-
-
 def p2():
-    def is_safe(numbers: list[int], problem_dampener: bool = False, remove_first: bool = True):
-        if len(set(numbers)) == 1:
-            return False
-        inc = 0
-        dec = 0
-        bd = 0
-        eqs = 0
-        pp = -1
-        for i, curr in enumerate(numbers):
-            nxt_i = min(len(numbers) - 1, i + 1)
-            if nxt_i == i:
-                break
-            nxt = elements[nxt_i]
-            df = abs(curr - nxt)
-            if df > 3 or df < 1:
-                bd += 1
-                pp = i
-                break
-            if curr > nxt:
-                inc += 1
-            elif curr < nxt:
-                dec += 1
-            else:
-                eqs += 1
-            if inc > 0 and dec > 0:
-                pp = i
-                break
-        if (inc > 0 and dec > 0) or bd > 0 or eqs > 1:
-            if problem_dampener:
-                return False
-            else:
-                if remove_first:
-                    numbers.pop(pp)
-                else:
-                    numbers.pop(pp + 1)
-                return is_safe(numbers, True)
-        else:
-            return True
+    def preprocess_report(report):
+        """
+        Preprocess the report to remove the first sequence of equal elements.
+        Returns the modified report.
+        """
+        for i in range(1, len(report)):
+            if report[i] != report[i - 1]:
+                return report[i:]  # Return the report starting from the first differing element
+        return report  # If all elements are equal, return the report as-is
 
-    solution = 0
+    def is_safe(report):
+        """Check if a report is safe."""
+        n = len(report)
+        diffs = [report[i + 1] - report[i] for i in range(n - 1)]
+
+        # Check if all differences are within 1 to 3 and are either all positive or all negative
+        if all(1 <= d <= 3 for d in diffs) or all(-3 <= d <= -1 for d in diffs):
+            return True
+        return False
+
+    def can_be_safe_with_removal(report):
+        """Check if a report can be made safe by removing one level."""
+        n = len(report)
+        for i in range(n):
+            # Remove one level and check if the remaining report is safe
+            new_report = report[:i] + report[i + 1:]
+            if is_safe(new_report):
+                return True
+        return False
+
+    def count_safe_reports(data):
+        """Count the number of safe reports including Problem Dampener rules."""
+        safe_count = 0
+
+        for report in data:
+            preprocessed_report = preprocess_report(report)
+            if is_safe(preprocessed_report) or can_be_safe_with_removal(preprocessed_report):
+                safe_count += 1
+
+        return safe_count
+
+    lines = []
     for line in puzzle_input:
-        elements = [int(x) for x in line.split()]
-        if is_safe(elements, False, False):
-            solution += 1
-        elif is_safe(elements, False, True):
-            solution += 1
-        elif is_safe(elements[1:], True, True):
-            print(line)
-            solution += 1
-        elif is_safe(elements[1:], True, False):
-            solution += 1
-        elif is_safe(elements[:-1], True, True):
-            solution += 1
-        elif is_safe(elements[:-1], True, False):
-            solution += 1
-        # else:
-        #     print(line)
-    print(solution)
+        lines.append([int(x) for x in line.split()])
+
+    print(count_safe_reports(lines))
 
 
 p2()
