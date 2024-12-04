@@ -1,5 +1,4 @@
 import os
-from os import remove
 
 from utils import read_puzzle_input
 
@@ -35,22 +34,14 @@ def p1():
 
 
 def p2():
-    def preprocess_report(report):
-        """
-        Preprocess the report to remove the first sequence of equal elements.
-        Returns the modified report.
-        """
-        for i in range(1, len(report)):
-            if report[i] != report[i - 1]:
-                return report[i:]  # Return the report starting from the first differing element
-        return report  # If all elements are equal, return the report as-is
-
     def is_safe(report):
         """Check if a report is safe."""
         n = len(report)
-        diffs = [report[i + 1] - report[i] for i in range(n - 1)]
+        if n < 2:
+            return True  # Trivially safe if there are fewer than 2 levels
 
-        # Check if all differences are within 1 to 3 and are either all positive or all negative
+        diffs = [report[i] - report[i - 1] for i in range(1, n)]
+        # Check if the differences are all within 1 to 3 or -3 to -1
         if all(1 <= d <= 3 for d in diffs) or all(-3 <= d <= -1 for d in diffs):
             return True
         return False
@@ -59,27 +50,24 @@ def p2():
         """Check if a report can be made safe by removing one level."""
         n = len(report)
         for i in range(n):
-            # Remove one level and check if the remaining report is safe
+            # Create a new report by removing the ith level
             new_report = report[:i] + report[i + 1:]
             if is_safe(new_report):
                 return True
         return False
 
     def count_safe_reports(data):
-        """Count the number of safe reports including Problem Dampener rules."""
+        """Count the number of safe reports, considering the Problem Dampener rule."""
         safe_count = 0
 
         for report in data:
-            preprocessed_report = preprocess_report(report)
-            if is_safe(preprocessed_report) or can_be_safe_with_removal(preprocessed_report):
+            if is_safe(report) or can_be_safe_with_removal(report):
                 safe_count += 1
-
         return safe_count
 
     lines = []
     for line in puzzle_input:
-        lines.append([int(x) for x in line.split()])
-
+        lines.append([int(x.strip()) for x in line.split()])
     print(count_safe_reports(lines))
 
 
