@@ -44,4 +44,27 @@ def p1(pi):
     print(solution)
 
 
-p1(puzzle_input)
+def p2(pi):
+    def count_occurrences(swr):
+        result = 0
+        for sw in swr:
+            # check main diagonal
+            main_dg = "".join(np.diag(sw, 0))
+            side_dg = "".join(np.diag(np.fliplr(sw), 0))
+            if (main_dg == "MAS" or main_dg[::-1] == "MAS") and (side_dg == "MAS" or side_dg[::-1] == "MAS"):
+                result += 1
+        return result
+
+    pi = [list(i + ' ' * (len(max(pi)) - len(i))) for i in pi]
+
+    # pad existing input
+    pi = np.array(pi)
+    pi = np.pad(array=pi, pad_width=((2, 2), (2, 2)), mode="constant", constant_values='Y')
+    sliding_windows = np.lib.stride_tricks.sliding_window_view(x=pi, window_shape=(3, 3))
+    solution = 0
+    for sliding_window_row in sliding_windows:
+        solution += count_occurrences(sliding_window_row)
+    print(solution)
+
+
+p2(puzzle_input)
