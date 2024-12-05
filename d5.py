@@ -58,9 +58,25 @@ def p1():
         result = True
         for inx in range(len(pq) - 1):
             result &= eval_rule(pq[inx], pq[inx + 1])
-        if result:
+        if not result:
+            while not result:
+                for inx in range(len(pq) - 1):
+                    evl = eval_rule(pq[inx], pq[inx + 1])
+                    if not evl:
+                        tmp = pq[inx]
+                        pq[inx] = pq[inx + 1]
+                        pq[inx + 1] = tmp
+                # print(pq)
+                result = True
+                for inx in range(len(pq) - 1):
+                    evl = eval_rule(pq[inx], pq[inx + 1])
+                    result &= evl
+                if result:
+                    break
+            print("Adding", pq[int(len(pq) / 2)])
             solution += pq[int(len(pq) / 2)]
     print(solution)
+
 
 def p2():
     pass
