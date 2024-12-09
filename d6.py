@@ -143,7 +143,7 @@ def p2(p1seen: set):
     e = 0
 
     for i, loop_candidate in enumerate(loop_candidates):
-        # print(i, "of", lcs)
+        print(i, "of", lcs)
         this_puzzle_input = [x[:] for x in puzzle_input]
         # put an obstacle, check for loop
         this_puzzle_input[loop_candidate[0]][loop_candidate[1]] = wall
