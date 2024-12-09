@@ -17,6 +17,8 @@ def p1():
     n = len(puzzle_input)
     i = 1
     order = 0
+    num_dots = 0
+    free = '.'
     while i <= n:
         if i % 2:
             file = int(puzzle_input[i - 1])
@@ -26,28 +28,32 @@ def p1():
         else:
             free_space = int(puzzle_input[i - 1])
             for x in range(free_space):
-                disk.append('.')
+                disk.append(free)
+                num_dots += 1
         i += 1
-    copy_disk = [x for x in disk]
-    copy_reversed = [x for x in disk]
-    copy_reversed = copy_reversed[::-1]
+    print(disk)
+    print(num_dots)
+    fixed_disk = [free] * num_dots
+    iters = 0
+    i = 0
+    j = len(disk) - 1
+    while iters < num_dots and disk[-num_dots:] != fixed_disk:
+        while disk[i] != free:
+            i += 1
+        while disk[j] == free:
+            j -= 1
+        tmp = disk[i]
+        disk[i] = disk[j]
+        disk[j] = tmp
 
-    def numbers_left(arr, inx):
-        return any([str(x).isdigit() for x in arr[inx:]])
+    i = 0
+    result = 0
+    while disk[i] != free:
+        result += i * int(disk[i])
+        i += 1
 
-    def find_first(arr, inx):
-        pass
+    print(result)
 
-    j = 0
-    for i in range(len(copy_disk)):
-        if copy_disk[i] == '.' and numbers_left(copy_disk, i) > 0:
-            first = find_first(copy_reversed, j)
-            if first is None:
-                break
-            copy_disk[i] = first
-            j += 1
-
-    print(copy_disk)
 
 
 p1()
