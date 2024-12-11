@@ -43,9 +43,11 @@ def p1():
         if x >= n or x < 0 or y < 0 or y >= m:
             break
         # try to move one place
-        try:
-            while True:
-                if puzzle_input[x][y] == '^':  # top
+        itr = 0
+        while itr < n * m:
+            itr += 1
+            if puzzle_input[x][y] == '^':  # top
+                if x > 0:
                     if puzzle_input[x - 1][y] == clear:
                         # clean current place
                         puzzle_input[x][y] = clear
@@ -57,11 +59,12 @@ def p1():
                         seen.add((x - 1, y))
                         # add the new place to the queue
                         queue.append((x - 1, y))
-                        print(x - 1, y)
-                        break
+                        # print(x - 1, y)
+                        continue
                     else:
                         puzzle_input[x][y] = go_right[puzzle_input[x][y]]
-                if puzzle_input[x][y] == '>':  # right
+            if puzzle_input[x][y] == '>':  # right
+                if y < m - 1:
                     if puzzle_input[x][y + 1] == clear:
                         # clean current place
                         puzzle_input[x][y] = clear
@@ -73,11 +76,12 @@ def p1():
                         seen.add((x, y + 1))
                         # add the new place to the queue
                         queue.append((x, y + 1))
-                        print(x, y + 1)
-                        break
+                        # print(x, y + 1)
+                        continue
                     else:
                         puzzle_input[x][y] = go_right[puzzle_input[x][y]]
-                if puzzle_input[x][y] == 'v':  # bottom
+            if puzzle_input[x][y] == 'v':  # bottom
+                if x < n - 1:
                     if puzzle_input[x + 1][y] == clear:
                         # clean current place
                         puzzle_input[x][y] = clear
@@ -89,11 +93,12 @@ def p1():
                         seen.add((x + 1, y))
                         # add the new place to the queue
                         queue.append((x + 1, y))
-                        print(x + 1, y)
-                        break
+                        # print(x + 1, y)
+                        continue
                     else:
                         puzzle_input[x][y] = go_right[puzzle_input[x][y]]
-                if puzzle_input[x][y] == '<':  # left
+            if puzzle_input[x][y] == '<':  # left
+                if y > 0:
                     if puzzle_input[x][y - 1] == clear:
                         # clean current place
                         puzzle_input[x][y] = clear
@@ -105,15 +110,12 @@ def p1():
                         seen.add((x, y - 1))
                         # add the new place to the queue
                         queue.append((x, y - 1))
-                        print(x, y - 1)
-                        break
+                        # print(x, y - 1)
+                        continue
                     else:
                         puzzle_input[x][y] = go_right[puzzle_input[x][y]]
-        except IndexError:
-            # index out of bounds, anywhere
-            print(len(seen))
-    seen.remove(guard)
-    print(len(seen))
+    # seen.remove(guard)
+    # print(len(seen))
     return ordered
 
 
@@ -135,7 +137,8 @@ def p2(p1seen: set):
         for jnx in range(m):
             if puzzle_input[inx][jnx] != clear and puzzle_input[inx][jnx] != wall:
                 guard = (inx, jnx, '^')
-            if puzzle_input[inx][jnx] == clear and (inx, jnx) in set(p1seen):  # any clear point is a potential loop candidate
+            if puzzle_input[inx][jnx] == clear and (inx, jnx) in set(
+                    p1seen):  # any clear point is a potential loop candidate
                 loop_candidates.append((inx, jnx, wall))
 
     lcs = len(loop_candidates)
@@ -143,7 +146,7 @@ def p2(p1seen: set):
     e = 0
 
     for i, loop_candidate in enumerate(loop_candidates):
-        print(i, "of", lcs)
+        # print(i, "of", lcs)
         this_puzzle_input = [x[:] for x in puzzle_input]
         # put an obstacle, check for loop
         this_puzzle_input[loop_candidate[0]][loop_candidate[1]] = wall
