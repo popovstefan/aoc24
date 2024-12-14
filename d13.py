@@ -99,8 +99,8 @@ def p2():
             parts = parts[1].split(", ")
             x = parts[0].index("X") + 2
             y = parts[1].index("Y") + 2
-            c1 = int(parts[0][x:]) #+ 10000000000000
-            c2 = int(parts[1][y:]) #+ 10000000000000
+            c1 = int(parts[0][x:]) + 10000000000000
+            c2 = int(parts[1][y:]) + 10000000000000
         if len(line.strip()) == 0:
             claws.append([a1, a2, b1, b2, c1, c2])
             a1 = 0
@@ -110,6 +110,7 @@ def p2():
             c1 = 0
             c2 = 0
     result = 0
+    print(claws)
     for claw in claws:
         a1, a2, b1, b2, c1, c2 = claw
         delta = (b2 * a1) - (a2 * b1)
@@ -119,11 +120,12 @@ def p2():
         else:
             delta_x = (c1 * b2) - (b1 * c2)
             delta_y = (a1 * c2) - (c1 * a2)
-            x = delta_x / delta
-            y = delta_y / delta
-            x = int(x)
-            y = int(y)
-            if a1 * x + b1 * y == c1 and a2 * x + b2 * y == c2:
+            if delta_x / delta == delta_x // delta and delta_y / delta == delta_y // delta:
+                x = delta_x / delta
+                y = delta_y / delta
+                x = int(x)
+                y = int(y)
+                # if a1 * x + b1 * y == c1 and a2 * x + b2 * y == c2:
                 print(claw)
                 print(delta, delta_x, delta_y)
                 print(x, y)
