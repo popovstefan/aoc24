@@ -1,6 +1,8 @@
 import copy
 import os
 from functools import cache
+import numpy as np
+import matplotlib.image
 
 from utils import read_puzzle_input
 
@@ -32,7 +34,7 @@ def move_robot(x_, y_, dx_, dy_):
 
 
 def p1(my_robots):
-    seconds = 1
+    seconds = 132
     env = {}
     for robot in my_robots:
         x, y, dx, dy = robot
@@ -62,29 +64,36 @@ def p1(my_robots):
 
 
 def p2(my_robots):
-    seconds = 101
-    for second in range(1, seconds):
-        grid = []
-        for i in range(n):
-            grid.append([])
-            for _ in range(m):
-                grid[i].append('.')
+    res = []
+    for seconds in range(1, 101 * 103):
         env = {}
         for robot in my_robots:
             x, y, dx, dy = robot
-            new_x = (x + (dx * second)) % n
-            new_y = (y + (dy * second)) % m
+            new_x = (x + (dx * seconds)) % n
+            new_y = (y + (dy * seconds)) % m
             if (new_x, new_y) not in env:
                 env[(new_x, new_y)] = 0
             env[(new_x, new_y)] += 1
-        for robot in my_robots:
-            x, y, _, _ = robot
-            grid[x][y] = '*'
-        for i in range(n):
-            print(grid[i])
-        with open(f'matrix{second}.txt', 'w') as testfile:
-            for row in grid:
-                testfile.write(' '.join([str(a) for a in row]) + '\n')
+        q1 = 0
+        q2 = 0
+        q3 = 0
+        q4 = 0
+        for k, v in env.items():
+            x, y = k
+            if v > 0:
+                if x < n // 2 and y < m // 2:
+                    q1 += v
+                if x > n // 2 and y > m // 2:
+                    q4 += v
+                if x < n // 2 and y > m // 2:
+                    q3 += v
+                if x > n // 2 and y < m // 2:
+                    q2 += v
+
+        # print(q1, q2, q3, q4)
+        # print(q1 * q2 * q3 * q4)
+        res.append((seconds, q1 * q2 * q3 * q4))
+    print(sorted(res, key=lambda x: x[1])[:15])
 
 
 p2(robots)
