@@ -32,7 +32,7 @@ def move_robot(x_, y_, dx_, dy_):
 
 
 def p1(my_robots):
-    seconds = 100
+    seconds = 1
     env = {}
     for robot in my_robots:
         x, y, dx, dy = robot
@@ -61,4 +61,30 @@ def p1(my_robots):
     print(q1 * q2 * q3 * q4)
 
 
-p1(robots)
+def p2(my_robots):
+    seconds = 101
+    for second in range(1, seconds):
+        grid = []
+        for i in range(n):
+            grid.append([])
+            for _ in range(m):
+                grid[i].append('.')
+        env = {}
+        for robot in my_robots:
+            x, y, dx, dy = robot
+            new_x = (x + (dx * second)) % n
+            new_y = (y + (dy * second)) % m
+            if (new_x, new_y) not in env:
+                env[(new_x, new_y)] = 0
+            env[(new_x, new_y)] += 1
+        for robot in my_robots:
+            x, y, _, _ = robot
+            grid[x][y] = '*'
+        for i in range(n):
+            print(grid[i])
+        with open(f'matrix{second}.txt', 'w') as testfile:
+            for row in grid:
+                testfile.write(' '.join([str(a) for a in row]) + '\n')
+
+
+p2(robots)
