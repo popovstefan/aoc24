@@ -187,7 +187,6 @@ def p2():
                 visited = visited.union(plot)
                 # add the plot
                 plots.append(plot)
-    print(len(plots))
     result = 0
     for plot in plots:
         a = 0
@@ -196,19 +195,14 @@ def p2():
             f_perimeter = perimeter2(el[0], el[1])
             fields = fields.union(f_perimeter)
             a += 1
-        # print("f", fields)
-        xs = len(set([x[0] for x in fields]))
-        ys = len(set([x[1] for x in fields]))
-        p = xs + ys
-
-        # xs = set([x[0] for x in fields])
-        # ys = set([x[1] for x in fields])
-        # p = len(xs.union(ys))
-        # p = len(fields)
-
-        result += (a * p)
+        p = 0
         print(plot)
-        print(a, p, "price", a * p)
+        xs = sorted([x[0] for x in fields])
+        ys = sorted([x[1] for x in fields])
+        print(xs, ys)
+        result += (a * p)
+        # print(plot)
+        # print(a, p, "price", a * p)
     print(result)
 
 p2()

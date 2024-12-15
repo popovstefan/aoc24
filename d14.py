@@ -1,8 +1,5 @@
-import copy
 import os
 from functools import cache
-import numpy as np
-import matplotlib.image
 
 from utils import read_puzzle_input
 
