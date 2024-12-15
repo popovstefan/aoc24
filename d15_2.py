@@ -1,3 +1,4 @@
+import copy
 import os
 
 from utils import read_puzzle_input
@@ -80,6 +81,7 @@ def can_move(mv, rbt, grd):
 
 def move(mv, rbt, grd):
     x, y = rbt
+    backup_grid = copy.deepcopy(grd)
     if mv == '^':
         # check if there's at least one free cell top
         for i in range(x, 0, -1):
@@ -88,6 +90,30 @@ def move(mv, rbt, grd):
                 # move up everything between the 'tmp' cell and the robot position
                 for k in range(i, x):
                     grd[k][y] = grd[k + 1][y]
+                    if grd[k][y] == '[':
+                        grd[k][y + 1] = grd[k + 1][y + 1]
+                        grd[k + 1][y + 1] = '.'
+                        if grd[k][y + 1] == '[':
+                            grd[k][y + 2] = grd[k + 1][y + 2]
+                            grd[k + 1][y + 2] = '.'
+                    if grd[k][y] == ']':
+                        grd[k][y - 1] = grd[k + 1][y - 1]
+                        grd[k + 1][y - 1] = '.'
+                        if grd[k][y - 1] == ']':
+                            grd[k][y - 2] = grd[k + 1][y - 2]
+                            grd[k + 1][y - 2] = '.'
+                    # if grd[k][y] == '[':
+                    #     if grd[k + 1][y + 1] == '#':
+                    #         movement is not possible, return method arguments
+                    # return (x, y), backup_grid
+                    # move the other part of the box
+                    # grd[k][y + 1] = grd[k + 1][y + 1]
+                    # if grd[k][y] == '[':
+                    #     if grd[k + 1][y - 1] == '#':
+                    #         movement is not possible, return method arguments
+                    # return (x, y), backup_grid
+                    # move the other part of the box
+                    # grd[k][y - 1] = grd[k + 1][y - 1]
                 # free up the robot spot
                 grd[x][y] = tmp
                 # move the robot
@@ -123,13 +149,29 @@ def move(mv, rbt, grd):
                 print(grd[x][y - 1], "robot")
                 break
     elif mv == 'v':
-        # check if there's at least one free cell top
+        # check if there's at least one free cell bottom
         for i in range(x, N):
             if grd[i][y] == '.':
                 tmp = grd[i][y]  # this should be free cell
                 # move down everything between the 'tmp' cell and the robot position
                 for k in range(i, x, -1):
                     grd[k][y] = grd[k - 1][y]
+                    if grd[k][y] == '[':
+                        grd[k][y + 1] = grd[k - 1][y + 1]
+                        grd[k - 1][y + 1] = '.'
+                    if grd[k][y] == ']':
+                        grd[k][y - 1] = grd[k - 1][y - 1]
+                        grd[k - 1][y - 1] = '.'
+                        # if grd[k][y] == '[':
+                    #     if grd[k - 1][y + 1] == '#':
+                    #         # movement is not possible
+                    #         return (x, y), backup_grid
+                    #     grd[k][y + 1] = grd[k - 1][y + 1]
+                    # if grd[k][y] == ']':
+                    #     if grd[k - 1][y - 1] == '#':
+                    #         # movement is not possible
+                    #         return (x, y), backup_grid
+                    #     grd[k][y - 1] = grd[k - 1][y - 1]
                 # free up the robot spot
                 grd[x][y] = tmp
                 # move the robot
@@ -157,8 +199,8 @@ def p2(robot_, grid_):
             if grid_[i][j] == '[':
                 result += (i * 100 + j)
     print(result)
-    for g in grid_:
-        print("".join(g))
+    # for g in grid_:
+    #     print("".join(g))
 
 
 p2(robot, grid)
