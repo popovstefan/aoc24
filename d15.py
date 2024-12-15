@@ -35,22 +35,30 @@ def can_move(mv, rbt, grd):
     x, y = rbt
     if mv == '^':
         # check if there's at least one free cell top
-        for i in range(x):
+        for i in range(x, 0, -1):
+            if grd[i][y] == '#':
+                return False
             if grd[i][y] == '.':
                 return True
     elif mv == '>':
         # check if there's at least one free cell right
         for i in range(y, M):
+            if grd[x][i] == '#':
+                return False
             if grd[x][i] == '.':
                 return True
     elif mv == '<':
         # check if there's at least one free cell left
-        for i in range(y):
+        for i in range(y, 0, -1):
+            if grd[x][i] == '#':
+                return False
             if grd[x][i] == '.':
                 return True
     elif mv == 'v':
-        # check if there's at least one free cell top
+        # check if there's at least one free cell bottom
         for i in range(x, N):
+            if grd[i][y] == '#':
+                return False
             if grd[i][y] == '.':
                 return True
     else:
@@ -64,7 +72,7 @@ def move(mv, rbt, grd):
     x, y = rbt
     if mv == '^':
         # check if there's at least one free cell top
-        for i in range(x):
+        for i in range(x, 0, -1):
             if grd[i][y] == '.':
                 tmp = grd[i][y]  # this should be free cell
                 # move up everything between the 'tmp' cell and the robot position
