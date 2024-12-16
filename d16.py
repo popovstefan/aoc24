@@ -7,6 +7,10 @@ pwd = os.path.dirname(__file__)
 # read input
 puzzle_input = read_puzzle_input(os.path.join(pwd, "puzzle_inputd16.txt"))
 
+import sys
+sys.setrecursionlimit(2500)
+
+
 grid = []
 
 for i, line in enumerate(puzzle_input):
@@ -16,7 +20,7 @@ for i, line in enumerate(puzzle_input):
 
 N = len(grid)
 M = len(grid[0])
-print(grid)
+# print(grid)
 
 graph = {}
 
@@ -58,7 +62,7 @@ def p1_1(g, s, e, path=[]):
 
 
 all_paths = p1_1(graph, f"{spos[0]}-{spos[1]}", f"{epos[0]}-{epos[1]}", [])
-print(spos, epos)
+# print(spos, epos)
 
 m_cost = float("inf")
 for path in all_paths:
@@ -90,9 +94,9 @@ for path in all_paths:
             nchanges += 1
         if ndr == '>' and dr == '<':
             nchanges += 1
-        print("x1", x1, "y1", y1)
-        print("x2", x2, "y2", y2)
-        print(dr, ndr, nchanges)
+        # print("x1", x1, "y1", y1)
+        # print("x2", x2, "y2", y2)
+        # print(dr, ndr, nchanges)
         dr = ndr
         fpos = npos
     cost = 1000 * nchanges + len(path) - 1
