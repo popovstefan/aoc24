@@ -8,8 +8,8 @@ pwd = os.path.dirname(__file__)
 puzzle_input = read_puzzle_input(os.path.join(pwd, "puzzle_inputd16.txt"))
 
 import sys
-sys.setrecursionlimit(2500)
 
+sys.setrecursionlimit(5500)
 
 grid = []
 
@@ -45,17 +45,75 @@ for i in range(N):
             if j > 0 and grid[i][j - 1] != '#':
                 graph[pos].append(f"{i}-{j - 1}")
 
+default_mcs = 213716
+mcs = default_mcs
+
+
+def calc_cost(p):
+    global mcs, default_mcs
+    fpos = p[0]
+    dr = '>'
+    ndr = 'o'
+    nchanges = 0
+    for npos in p[1:]:
+        fp = fpos.split("-")
+        x1, y1 = int(fp[0]), int(fp[1])
+        np = npos.split("-")
+        x2, y2 = int(np[0]), int(np[1])
+        if x1 + 1 == x2:
+            ndr = 'v'
+        if x1 - 1 == x2:
+            ndr = '^'
+        if y1 + 1 == y2:
+            ndr = '>'
+        if y1 - 1 == y2:
+            ndr = '<'
+        if dr != ndr:
+            nchanges += 1
+        if dr == '^' and ndr == 'v':
+            nchanges += 1
+        if ndr == '^' and dr == 'v':
+            nchanges += 1
+        if dr == '>' and ndr == '<':
+            nchanges += 1
+        if ndr == '>' and dr == '<':
+            nchanges += 1
+        dr = ndr
+        fpos = npos
+        c = 1000 * nchanges + len(p) - 1
+        if mcs < default_mcs and c >= mcs:
+            return c
+    return 1000 * nchanges + len(p) - 1
+
 
 def p1_1(g, s, e, path=[]):
+    global mcs
+    if s in path:
+        yield []
+        return
     path = path + [s]
+    c = calc_cost(path)
+    if mcs < default_mcs and c >= mcs:
+        yield []
+        return
     if s == e:
-        return [path]
+        if c < mcs:
+            mcs = c
+            print("mcs", mcs)
+            yield [path]
+            return
+        yield []
+        return
     if s not in g:
-        return []
+        yield []
+        return
     paths = []
     for n in g[s]:
         if n not in path:
-            nps = p1_1(g, n, e, path)
+            c = calc_cost(path)
+            if c > mcs:
+                continue
+            nps = [x for x in p1_1(g, n, e, path) if len(x) > 0]
             for np in nps:
                 paths.append(np)
     return paths
@@ -70,6 +128,7 @@ for path in all_paths:
     dr = '>'
     ndr = 'o'
     nchanges = 0
+    cost = 0
     for npos in path[1:]:
         fp = fpos.split("-")
         x1, y1 = int(fp[0]), int(fp[1])
@@ -94,11 +153,10 @@ for path in all_paths:
             nchanges += 1
         if ndr == '>' and dr == '<':
             nchanges += 1
-        # print("x1", x1, "y1", y1)
-        # print("x2", x2, "y2", y2)
-        # print(dr, ndr, nchanges)
         dr = ndr
         fpos = npos
-    cost = 1000 * nchanges + len(path) - 1
+        cost = 1000 * nchanges + len(path) - 1
+        if cost > m_cost:
+            break
     m_cost = min(cost, m_cost)
 print("min cost", m_cost)
