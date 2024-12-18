@@ -117,10 +117,22 @@ def p1(pm):
             ip += 2
         else:
             ip += 2
-    print(",".join([str(x) for x in result]))
+    # print(",".join([str(x) for x in result]))
+    return result
 
 
-print(prgrm)
+# print(prgrm)
 
-p1(prgrm)
-print(rega, regb, regc)
+# p1(prgrm)
+# print(rega, regb, regc)
+
+
+def p2(pm):
+    global rega
+    y_true = ",".join([str(x) for x in p1(pm)])
+    print(y_true)
+    for i in range(2):
+        pass
+
+
+p2(prgrm)
